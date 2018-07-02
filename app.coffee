@@ -10,7 +10,7 @@ padding = 16
 count = data.buckets.length
 boxSize = (Screen.width-3*padding)/2
 focusedBoxWidth = Screen.width-4*padding
-focusedBoxHeight = 200	
+focusedBoxHeight = 124	
 activeBucket = null
 
 # scroll = new ScrollComponent
@@ -31,6 +31,7 @@ class Bucket extends Layer
 		@thumbnail = new Layer
 			width: @options.width*0.6
 			height: @options.height*0.6
+			borderRadius:  @options.height*0.3
 		
 		super @options
 				
@@ -40,6 +41,7 @@ class Bucket extends Layer
 		@label.parent = @
 		@label.centerX()
 		@label.textAlign = "center"
+		@label.state = "default"
 		@label.width = @thumbnail.width
 		@label.autoHeight = yes
 		@label.y = @thumbnail.y + @thumbnail.height + 16
@@ -58,12 +60,27 @@ class Bucket extends Layer
 				animationOptions: 
 					curve: Bezier.ease
 					time: 0.1
-						
+					
+		@label.states =
+			default:
+				x: @thumbnail.x
+				y: @thumbnail.y + @thumbnail.height + 16
+				textAlign: "center"
+				width: @thumbnail.width
+				autoHeight: yes
+			active:
+				x: @thumbnail.x + @thumbnail.width + padding
+				y: @thumbnail.y 
+				textAlign: "center"
+				width: @thumbnail.width
+				autoHeight: yes		
 		@.onClick ->
 			if @.state == "active"
 				for bucketBox in bucketBoxes
 					bucketBox.states.switch "default"
 					bucketBox.state = "default"
+					bucketBox.label.states.switchInstant "default"
+					bucketBox.label.state = "default"
 				scroll.scrollHorizontal = false
 				scroll.scrollVertical = true
 				bucketsCont.width = Screen.width
@@ -89,6 +106,8 @@ class Bucket extends Layer
 					tag_trend.text = tagObject.trend	
 				tagsContainer.visible = true
 				for inActiveBucketBox, index in bucketBoxes
+					inActiveBucketBox.label.states.switchInstant "active"
+					inActiveBucketBox.label.state = "active"
 					if index < activeIndex
 						inActiveBucketBox.states.inactive =
 							height: focusedBoxHeight
