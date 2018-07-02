@@ -587,7 +587,7 @@
                   "height" : 19,
                   "width" : 42
                 },
-                "width" : 41
+                "width" : 0
               },
               "entityMap" : {
 
@@ -696,9 +696,9 @@
                 "os" : "10_14",
                 "size" : {
                   "height" : 15,
-                  "width" : 31
+                  "width" : 30
                 },
-                "width" : 30
+                "width" : 0
               },
               "entityMap" : {
 

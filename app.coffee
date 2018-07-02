@@ -11,6 +11,7 @@ count = data.buckets.length
 boxSize = (Screen.width-3*padding)/2
 focusedBoxWidth = Screen.width-4*padding
 focusedBoxHeight = 200	
+activeBucket = null
 
 # scroll = new ScrollComponent
 # 	height: Screen.height
@@ -70,10 +71,12 @@ class Bucket extends Layer
 					tagLayer.destroy()
 				tagsContainer.visible = false
 			else
-				@.states.switchInstant "active"
-				@.state = "active"
+				scroll.scrollToTop()
 				scroll.scrollHorizontal = true
 				scroll.scrollVertical = false
+				@.states.switchInstant "active"
+				@.state = "active"
+				activeBucket = @
 				activeIndex = bucketBoxes.indexOf(@)
 				for tagObject, index in @.tags
 					tagLayer = comp_tag.copy()
@@ -107,7 +110,7 @@ class Bucket extends Layer
 								curve: Bezier.ease
 								time: 0.1
 						inActiveBucketBox.states.switch "inactive"
-						inActiveBucketBox.state = "inactive"	
+						inActiveBucketBox.state = "inactive"
 					else 
 						inActiveBucketBox.states.switch "active"
 						inActiveBucketBox.state = "active"	
@@ -167,3 +170,69 @@ for bucketObject, index in data.buckets
 	bucketBox.thumbnail.image = Utils.randomImage()
 	bucketBox.tags = bucketObject.tags
 	bucketBoxes.push(bucketBox)						
+	
+# 	
+# scroll.onScroll ->
+# 	activeIndex = bucketBoxes.indexOf(activeBucket)
+# 	previousBucket = if activeIndex > 1 then bucketBoxes[activeIndex-1] else activeBucket
+# 	nextBucket = bucketBoxes[activeIndex+1]
+# 	print(nextBucket.screenFrame.x,  Screen.width/2)
+# 	if nextBucket.screenFrame.x < Screen.width/2 and nextBucket.screenFrame.x > 0
+# 		for tagLayer in tagsContainer.content.subLayers
+# 					tagLayer.destroy()
+# 				tagsContainer.visible = false
+# 		nextBucket.states.switchInstant "active"
+# 		nextBucket.state = "active"
+# 		activeBucket = nextBucket
+# 		scroll.scrollHorizontal = true
+# 		scroll.scrollVertical = false
+# 		for tagObject, index in nextBucket.tags
+# 			tagLayer = comp_tag.copy()
+# 			tagLayer.parent = tagsContainer.content
+# 			tagLayer.originX = 0
+# 			tagLayer.scale = 1.3
+# 			tagLayer.x = tagsContainer.frame.x
+# 			tagLayer.y = index*(tagLayer.height + padding)
+# 			tag_name.text = tagObject.name
+# 			tag_trend.text = tagObject.trend	
+# 		tagsContainer.visible = true
+# 		for inActiveBucketBox, index in bucketBoxes
+# 			if index < activeIndex
+# 				inActiveBucketBox.states.inactive =
+# 					height: focusedBoxHeight
+# 					width: focusedBoxWidth
+# 					x: nextBucket.x - (activeIndex - index)*(padding + focusedBoxWidth) 
+# 					y: padding
+# 					animationOptions: 
+# 						curve: Bezier.ease
+# 						time: 0.1
+# 				inActiveBucketBox.states.switch "inactive"
+# 				inActiveBucketBox.state = "inactive"
+# 			else if index > activeIndex
+# 				inActiveBucketBox.states.inactive =
+# 					height: focusedBoxHeight
+# 					width: focusedBoxWidth
+# 					x: nextBucket.x + (index - activeIndex)*(padding + focusedBoxWidth) 
+# 					y: padding
+# 					animationOptions: 
+# 						curve: Bezier.ease
+# 						time: 0.1
+# 				inActiveBucketBox.states.switch "inactive"
+# 				inActiveBucketBox.state = "inactive"	
+# 			else 
+# 				inActiveBucketBox.states.switch "active"
+# 				inActiveBucketBox.state = "active"	
+# # 		for tagLayer in tagsContainer.content.subLayers
+# # 			tagLayer.destroy()
+# # 			tagsContainer.visible = false
+# # # 			print(bucketBox.label.text, activeBucket.label.text)
+# # 		for tagObject, index in nextBucket.tags
+# # 				tagLayer = comp_tag.copy()
+# # 				tagLayer.parent = tagsContainer.content
+# # 				tagLayer.originX = 0
+# # 				tagLayer.scale = 1.3
+# # 				tagLayer.x = tagsContainer.frame.x
+# # 				tagLayer.y = index*(tagLayer.height + padding)
+# # 				tag_name.text = tagObject.name
+# # 				tag_trend.text = tagObject.trend	
+# # 			tagsContainer.visible = true			
